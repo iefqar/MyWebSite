@@ -1,0 +1,49 @@
+﻿@page "/familias"
+@page "/familia"
+
+@inject IStkFamiliumController StkFamiliumController
+
+<h1>Familias</h1>
+
+@MessageError
+
+@if (StkFamilium ==  null){
+    <p><em>Loading...</em></p>
+}else{
+    <table class="table">
+        <thead>
+        <tr>
+            <td>Id:</td>
+            <td>Descripcion</td>
+        </tr>
+    </thead>
+        <tbody>
+        @if (StkFamilium != null){
+            @foreach (var exist in StkFamilium)
+            {
+                <tr>
+                    <td>@exist.Id</td>
+                    <td>@exist.Descripcion</td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    public IEnumerable<StkFamilium> StkFamilium { get; set; }
+    private string MessageError { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            StkFamilium = await StkFamiliumController.GetAllFamilias();
+        }
+        catch (Exception e)
+        {
+            MessageError = e.Message;
+        }
+    }
+}

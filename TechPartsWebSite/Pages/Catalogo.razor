@@ -1,0 +1,58 @@
+﻿@page "/catalogo"
+
+@inject IStkItemController StkItemController
+
+<h1>Catalogo TechPart's</h1>
+
+@MessageError
+
+@if (Items ==  null){
+    <p><em>Loading...</em></p>
+}else{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>Codigo:</td>
+            <td>Descripcion:</td>
+            <td>Marca:</td>
+            <td>Grupo:</td>
+            <td>Proveedor:</td>
+            <td>Lista</td>
+        </tr>
+    </thead>
+        <tbody>
+            @if (Items != null)
+            {
+                @foreach (var exist in Items)
+            {
+                <tr>
+                    @*<td>@exist.Items.Where(x => x.Item == exist.Id).Select(z => z.Item).FirstOrDefault()</td>*@
+                    <td>@exist.Descripcion</td>
+                    <td>@exist.Subgrupo</td>
+                    <td>@exist.Grupo</td>
+                    <td>@exist.Familia</td>
+                    @*<td>@exist.StkPrecios.Where(x => x.Item == exist.Id).Select(z => z.Precio).FirstOrDefault()</td>*@
+                </tr>
+            }
+        } 
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<StkItem> Items { get; set; }
+
+    private string MessageError { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Items = (await StkItemController.GetAllItems()).ToList();
+        }
+        catch (Exception e)
+        {
+            MessageError = e.Message;
+        }
+    }
+}

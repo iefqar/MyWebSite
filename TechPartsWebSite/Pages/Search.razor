@@ -1,0 +1,18 @@
+﻿
+<div class="container-fluid">
+    <table>
+        <tr>
+            <td><RadzenTextBox Placeholder="Search..." Change=@(args => OnChange(args, "TextBox with placeholder")) Class="w-100" /></td>
+            <td><RadzenButton Text="Hi" /></td>
+        </tr>
+    </table>
+</div>
+ 
+ 
+@code {
+
+    private void OnChange(string value, string name)
+    {
+        Console.WriteLine($"{name} value changed to {value}");
+    }
+}

@@ -1,0 +1,40 @@
+﻿@page "/existencias"
+@page "/existencia"
+
+@inject IStkExistenciumController StkExistenciumController
+
+<h1>Existencias</h1>
+
+@if (StkExistencium ==  null){
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <table class="table">
+        <thead>
+        <tr>
+            <td>Deposito:</td>
+            <td>Ubicacion</td>
+        </tr>
+    </thead>
+        <tbody>
+            @foreach (var exist in StkExistencium)
+            {
+                <tr>
+                    <td>@exist.Deposito</td>
+                    <td>@exist.Ubicacion</td>
+                </tr>
+            }
+        
+        </tbody>
+    </table>
+}
+
+@code {
+    public IEnumerable<StkExistencium> StkExistencium { get; set; }
+
+
+    protected override async Task OnInitializedAsync() => StkExistencium = await StkExistenciumController.GetAllExistencia();
+
+}

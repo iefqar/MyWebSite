@@ -1,0 +1,57 @@
+﻿@using Radzen
+@inject IStkItemController StkItemController
+
+@if (ItemList ==  null){
+    <div>
+        <h1>Loading...</h1>
+        <div class="spinner-border text-danger"></div>
+    </div>
+     
+}
+else{
+    <RadzenDataGrid AllowFiltering="false" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
+                AllowSorting="true" Data="@ItemList" TItem="StkItem" Count="@count" ColumnWidth="200px"
+                SelectionMode="DataGridSelectionMode.Single" @bind-Value=@ItemSeleccionado>
+        <Columns>
+            <RadzenDataGridColumn TItem="StkItem" Context="data" Property="Id" Title="Codigo">
+                <Template>
+                    @data.StkPrecios.Select(i => i.Item).FirstOrDefault()
+                </Template>
+            </RadzenDataGridColumn>
+            @*<RadzenDataGridColumn TItem="StkItem" Property="Nuevo" Title="Nuevo" /> @*Propiedad no encontrada en la DB*@
+            <RadzenDataGridColumn TItem="StkItem" Property="Descripcion" Title="Descripcion" />
+            @*<RadzenDataGridColumn TItem="StkItem" Property="Obsaervacion" Title="Obsaervacion" /> @*Propiedad no encontrada en la DB*@
+            <RadzenDataGridColumn TItem="StkItem" Property="Subgrupo" Title="Marca" />
+            <RadzenDataGridColumn TItem="StkItem" Property="Grupo" Title="Grupo" />
+            <RadzenDataGridColumn TItem="StkItem" Context="data" Property="Familia" Title="Proveedor" ></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="StkItem" Context="data" Property="Precio" Title="Lista" FormatString="{0:d}">
+                <Template>
+                    @data.StkPrecios.Select(i => i.Precio).FirstOrDefault()
+                </Template>
+            </RadzenDataGridColumn>
+            @*<RadzenDataGridColumn TItem="StkItem" Context="data" Property="Precio" Title="Lista c/ IVA" /> @*Propiedad no encontrada en la DB*@
+            @*<RadzenDataGridColumn TItem="StkItem" Property="Stock" Title="Stock" /> @*Propiedad no encontrada en la DB*@
+        </Columns>
+    </RadzenDataGrid>
+}
+
+@code {
+    private IEnumerable<StkItem> ItemList { get; set; }
+    private int count;
+
+    private IList<StkItem> ItemSeleccionado;
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+
+        try
+        {
+            ItemList = (await StkItemController.GetAllItems()).ToList();
+            //ItemSeleccionado = ItemList.Take(1).ToList();
+        }
+        catch (Exception e)
+        {
+        }
+    }
+}
